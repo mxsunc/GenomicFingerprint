@@ -180,7 +180,6 @@ class Losses:
             super(Losses.cox_loss, self).__init__(name=name)
 
         def call(self, y_true, y_pred):
-            tf.print(y_pred)
             time_value = tf.squeeze(y_true[:, 0])
             event = tf.squeeze(y_true[:, 1])
             event = tf.cast(event, dtype=tf.bool)
