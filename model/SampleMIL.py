@@ -80,60 +80,7 @@ class InstanceModels:
             input = tf.keras.layers.Input(shape=self.shape, dtype=tf.float32)
             tf.print(input)
             self.model = tf.keras.Model(inputs=[input], outputs=[input])
-
-
-class SampleModels:
-    class PassThrough:
-        def __init__(self, shape=None):
-            self.shape = shape
-            self.model = None
-            self.build()
-
-        def build(self, *args, **kwarg):
-            input = tf.keras.layers.Input(self.shape, dtype=tf.float32)
-            self.model = tf.keras.Model(inputs=[input], outputs=[input])
-
-    class Type:
-        def __init__(self, shape=None, dim=None):
-            self.shape = shape
-            self.dim = dim
-            self.model = None
-            self.build()
-
-        def build(self, *args, **kwarg):
-            input = tf.keras.layers.Input(self.shape, dtype=tf.int32)
-            type_emb = Embed(embedding_dimension=self.dim, trainable=False)
-            self.model = tf.keras.Model(inputs=[input], outputs=[type_emb(input)])
-
-    class HLA:
-        def __init__(self, filters=8, latent_dim=4, fusion_dimension=64, default_activation=tf.keras.activations.relu):
-            self.default_activation = default_activation
-            self.fusion_dimension = fusion_dimension
-            self.filters = filters
-            self.latent_dim = latent_dim
-            self.model = None
-            self.build()
-
-        def build(self, *args, **kwargs):
-            hla_A = tf.keras.layers.Input(shape=(2, self.latent_dim), dtype=tf.float32)
-            hla_B = tf.keras.layers.Input(shape=(2, self.latent_dim), dtype=tf.float32)
-            hla_C = tf.keras.layers.Input(shape=(2, self.latent_dim), dtype=tf.float32)
-
-            # layers of convolution for sequence feature extraction based on conv_params
-            features = [[]] * 3
-            convolutions = [[]] * 3
-            for index, feature in enumerate([hla_A, hla_B, hla_C]):
-                convolutions[index] = tf.keras.layers.Conv2D(filters=self.filters, kernel_size=[1, 1], activation=Activations.ARU())
-                # apply conv to each allele
-                features[index] = convolutions[index](feature[:, tf.newaxis, :, :])
-                # pool over both alleles
-                features[index] = tf.reduce_max(features[index], axis=[1, 2])
-
-            fused = tf.concat(features, axis=-1)
-            fused = tf.keras.layers.Dense(units=self.fusion_dimension, activation=self.default_activation, kernel_regularizer=tf.keras.regularizers.l2())(fused) #
-
-            self.model = tf.keras.Model(inputs=[hla_A, hla_B, hla_C], outputs=[fused])
-
+            
 
 class RaggedModels:
     class AddRandomNoise(tf.keras.layers.Layer):
