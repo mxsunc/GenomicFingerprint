@@ -79,7 +79,7 @@ def generate_survival_sample(risk_variants, min_variants=1, max_variants=500, pe
     # Increase the effect of risk variants
     event_observed = True
     if risk_level == 'High Risk':
-        survival_time *= np.random.uniform(0.3, 0.5)  # More significant reduction for high risk
+        survival_time *= np.random.uniform(0.1, 0.3)  # More significant reduction for high risk
     else:
         # For some low-risk patients, set event_observed to False to indicate they do not die
         if np.random.rand() < 0.5:  # Adjust this probability as needed
