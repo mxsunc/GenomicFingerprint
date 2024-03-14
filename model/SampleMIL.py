@@ -1,6 +1,6 @@
 import tensorflow as tf
 from tensorflow.keras.layers import Lambda
-from model.KerasLayers import Activations, Ragged, Embed, StrandWeight
+from KerasLayers import Activations, Ragged, Embed, StrandWeight
 
 class InstanceModels:
     class VariantPositionBin:
